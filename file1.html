@@ -1,0 +1,88 @@
+<!--
+	作者：周华炜
+	时间：2018-06-01
+	描述：功能是求出字符串 s 与字符串 t 的第二长公共单词(这里，假设两个字符串均由英文字母和
+		空格字符组成)；若找到这样的公共单词，函数返回该单词，否则，函数返回NULL，如果
+		有多个满足要求，则返回第一个单词。
+		This is C programming text
+		This is a text for C programming
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>第二长公共单词</title>
+	</head>
+	<body>
+		<!--创建输入框和按钮-->
+		<input type="text"	name="s" placeholder="请输入英文词句" />
+		<br />
+		<input type="text"	name="t" placeholder="请输入英文词句" />
+		<br />
+		<button id="code_input">输出第二长公共单词</button>
+		<br />
+		<p></p>
+	</body>
+</html>
+<script>
+	window.onload = function(){
+		//获取节点
+		var values = document.getElementsByTagName("input");
+		var code_input = document.getElementById("code_input");
+		var p_html = document.getElementsByTagName("p")[0];
+		//查询第二长公共单词方法
+		function fn1(s,t){
+			var ary3 = [];
+			var ary1 = s.split(" ");
+			var ary2 = t.split(" ");
+			//找出所有“This is a text for C programming公共单词
+			for(let i=0;i<ary1.length;i++){
+				if(ary2.indexOf(ary1[i])!=-1 && ary3.indexOf(ary1[i])==-1){
+					ary3.push(ary1[i]);
+				}
+			}
+			//得出结果
+			if(ary3.length<2 || !fn2(ary3)){
+				//NULL有两种情况:1只有一个公共单词2所有公共单词等长
+				p_html.innerText = "NULL";
+			}
+			else{
+				let temp;
+				//防止数组首个字符串为最长字符串
+				for(let i=0;i<ary3.length;i++){
+					if(ary3[i].length!=fn3(ary3)){
+						temp=i;
+						break;
+					}
+				}
+				//找出第二长公共字符串
+				for(let i=0;i<ary3.length;i++){
+					if(ary3[temp].length<ary3[i].length && ary3[i].length!=fn3(ary3)){
+						temp=i;
+					}
+				}
+				p_html.innerText = ary3[temp];
+			}
+		}
+		//判断数组中每个字符串是否等长
+		function fn2(ary){
+			for (let i=1;i<ary.length;i++) {
+				if(ary[0].length != ary[i].length){
+					return true;
+				}
+			}
+		}
+		//找出数组中的第一长字符串的长度
+		function fn3(ary){
+			let temp=0;
+			for(let i=1;i<ary.length;i++){
+				if(ary[temp].length<ary[i].length){temp=i;}
+			}
+			return ary[temp].length;
+		}
+		//添加点击事件
+		code_input.onclick = function(){
+			fn1(values[0].value,values[1].value);
+		}
+	}
+</script>
