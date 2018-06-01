@@ -1,0 +1,73 @@
+<!--
+	作者：周华炜
+	时间：2018-06-01
+	描述： “旅行日志”。使用地图API，把你旅游到过的省份使用某种交互标注出来；鼠标放到相
+		关省份后可以看到相关的时间和备注；对于没有去过的地方，可以在地图上直接“做计
+		划”，比如，你之前没有去过浙江旅行，那直接可以地图上给浙江省做一个旅行计划，
+		比如，写上 “计划2018五一期间旅行”。对于已经去过的省份，不可以再做计划；
+-->
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+	<title>旅行日志</title>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=0et77GK7oCkOtltUQm17LwhLeLGOgxY3"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/library/CurveLine/1.5/src/CurveLine.min.js"></script>
+	<style type="text/css">
+		html,body{
+			width:100%;
+			height:100%;
+			margin:0;
+			overflow:hidden;
+			font-family:"微软雅黑";
+		}
+	</style>
+</head>
+<body>
+	<div style="width:100%;height:100%;border:1px solid gray" id="allmap"></div>
+</body>
+</html>
+<script type="text/javascript">
+	// 百度地图API功能
+	var map = new BMap.Map("allmap",{minZoom:1,maxZoom:15});
+	map.enableScrollWheelZoom(true);
+	map.centerAndZoom(new BMap.Point(116.273341,37.471659),15);
+	var data_info = [[119.485289,39.835231,"时间:2008-06-01<br/>地址：秦皇岛北戴河<br/>描述:和家人一起旅游"],
+					 [116.277050,37.474648,"时间:2018-06-01<br/>地址：德州市罗马花园<br/>描述:我爱我家∩_∩"],
+					 [120.468870,36.107850,"时间:2016-07-15<br/>地址：青岛市崂山区<br/>描述:是依山傍水的好地方"],
+					 [120.497109,36.161222,"时间:2017-07-01<br/>地址：中国海洋大学<br/>描述:我的母校"],
+					 [126.650312,45.669500,"时间:2015-11-01<br/>地址：哈尔滨名都滑雪场<br/>描述:是一次有趣的尝试"],
+					 [128.598514,45.737169,"时间:2014-08-01<br/>地址：松花江<br/>描述:风景很美,食物诱人"],
+					 [117.105555,36.255833,"时间:2013-10-11<br/>地址：泰山<br/>描述:和朋友们登顶,看到美丽日出"],
+					 [116.397479,39.908720,"时间:2010-09-01<br/>地址：北京天安门<br/>描述:升国旗庄严肃穆"],
+					 [120.150269,30.242701,"时间:2016-07-01<br/>地址：杭州西湖<br/>描述:风景美,秀丽的建筑"],
+					 [107.135798,29.043091,"时间:2012-08-01<br/>地址：重庆金佛山<br/>描述:风景美,尤其那山那雾"],
+					 [103.834302,36.061089,"时间:2016-04-12<br/>地址：兰州<br/>描述:吃尽各种面食烤肉,不亦乐乎"],
+					 [94.6578819,40.095208,"旅行计划:在2020年之前<br/>地址：月牙泉"],
+					 [91.1185792,29.655494,"旅行计划:期待一个人的朝拜<br/>地址：布达拉宫"]
+					];
+	var opts = {
+				width : 250,     // 信息窗口宽度
+				height: 100,     // 信息窗口高度
+				title : "信息窗口" , // 信息窗口标题
+				enableMessage:true//设置允许信息窗发送短息
+			   };
+	for(var i=0;i<data_info.length;i++){
+		var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]));  // 创建标注
+		var content = data_info[i][2];
+		map.addOverlay(marker);               // 将标注添加到地图中
+		addClickHandler(content,marker);
+	}
+	function addClickHandler(content,marker){
+		marker.addEventListener("click",function(e){
+			openInfo(content,e)}
+		);
+	}
+	function openInfo(content,e){
+		var p = e.target;
+		var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+		var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
+		map.openInfoWindow(infoWindow,point); //开启信息窗口
+	}
+</script>

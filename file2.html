@@ -1,0 +1,76 @@
+<!--
+	作者：周华炜
+	时间：2018-06-01
+	描述：某些整数能分解成若干个连续整数的和的形式，例如
+ 		15 = 1 + 2＋3＋4＋5
+ 		15 = 4 + 5 + 6
+ 		15 = 7 + 8
+		某些整数不能分解为连续整数的和，例如：16
+		输入：一个整数N（N <= 10000）
+		输出：整数N对应的所有分解组合，按照每个分解中的最小整数从小到大输出，每个分解
+		占一行，每个数字之间有一个空格（每行最后保留一个空格）；如果没有任何分解组合，
+		则输出NONE。
+-->
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>整数分解组合</title>
+	</head>
+	<body>
+		<!--创建输入框和按钮-->
+		<input type="text" placeholder="请输入一个整数" />
+		<br />
+		<button id="code_input">整数分解</button>
+		<br />
+		<div id="box"></div>
+	</body>
+</html>
+<script>
+	/*分析:如果一个整数N能被一个正奇数m整除,会得到m个N/m,那么从中间那个数开始
+	 * 向两边分别加一减一则会得到一列连续整数相加,且(N/m-m/2)即最小数大于0;那么
+	 * 整数除以正偶数需要有余数m/2,且(N/m-m/2+1)为最小数大于0,由此约等于m小于2
+	 * N的开方加1.且根据题目输出条件要求，可以将结果按要求先加入到数组中再按顺序输出。
+	 */
+	//获取节点
+	var Numbers = document.getElementsByTagName("input");
+	var code_input = document.getElementById("code_input");
+	var box = document.getElementById("box");
+	//函数
+	function fn(N,m){
+		//数组ary作为所有结果容器
+		var ary = [];
+		for(let i=2;i<=m;i++){
+			if(i%2==1 && N%i==0 && N/i-parseInt(i/2)>0){
+				//数组ary1作为临时容器
+				let ary1 = [];
+				for (let j=0;j<i;j++) {
+					ary1.push(N/i-parseInt(i/2)+j+" ");
+				}
+				ary.push(ary1.join(""));
+			}
+			if(i%2==0 && N%i==i/2 && parseInt(N/i)-i/2+1>0){
+				//数组ary1作为临时容器
+				let ary1 = [];
+				for (let j=0;j<i;j++) {
+					ary1.push(parseInt(N/i)-i/2+1+j+" ");
+				}
+				ary.push(ary1.join(""));
+			}
+		}
+		return ary;
+	}
+	//点击事件
+	code_input.onclick = function(){
+		var N = Numbers[0].value;
+		var m = parseInt(Math.sqrt(2*N))+1;
+		var ary = fn(N,m);
+		if(ary.length==0){box.innerHTML = "<p>NONE</p>"}
+		else{
+			box.innerHTML = "";
+			for (let i=0;i<ary.length;i++) {
+				box.innerHTML = box.innerHTML+"<p>"+ary[i]+"&nbsp;</p>";
+			}
+		}
+	}
+</script>
